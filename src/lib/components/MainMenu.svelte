@@ -5,8 +5,8 @@
 	import BackButton from './BackButton.svelte';
 	import CraggsLoungeNormal from './CraggsLoungeNormal.svelte';
 	import CraggsLoungeSecret from './CraggsLoungeSecret.svelte';
-	import BeerDispenser from './BeerDispenser.svelte';
-	import VodkaDispenser from './VodkaDispenser.svelte';
+	import BeerButton from './BeerButton.svelte';
+	import VodkaButton from './VodkaButton.svelte';
 	import { onMount } from 'svelte';
 
 	function incrementSecret() {
@@ -21,12 +21,46 @@
 		$secretCounter = -1;
 	}
 
-	function openValve() {
-		console.log('opened!');
+	async function openValve() {
+		let valveAction = 'openBeer';
+		if ($secretActive) {
+			valveAction = 'openVodka';
+		}
+		try {
+			const res = await fetch(`http://192.168.0.111/api/${valveAction}`, {
+				method: 'GET'
+			});
+			console.log(res);
+		} catch (error) {
+			createErrorMessage(error);
+		}
 	}
 
-	function closeValve() {
-		console.log('closed!');
+	async function closeValve() {
+		let valveAction = 'closeBeer';
+		if ($secretActive) {
+			valveAction = 'closeVodka';
+		}
+		try {
+			const res = await fetch(`http://192.168.0.111/api/${valveAction}`, {
+				method: 'GET'
+			});
+			console.log(res);
+		} catch (error) {
+			createErrorMessage(error);
+		}
+	}
+
+	function createErrorMessage(message: string) {
+		const errorMessage = document.createElement('h1');
+		errorMessage.style.position = 'absolute';
+		errorMessage.style.color = 'magenta';
+		errorMessage.style.top = '0';
+		errorMessage.style.textAlign = 'center';
+		errorMessage.style.width = '100%';
+		errorMessage.style.fontFamily = 'monospace';
+		errorMessage.innerHTML = message;
+		document.getElementById('container').appendChild(errorMessage);
 	}
 
 	onMount(() => {
@@ -38,7 +72,7 @@
 	});
 </script>
 
-<div>
+<div id="container">
 	{#if $secretActive}
 		<div
 			class="back-button"
@@ -59,11 +93,15 @@
 			<CraggsLoungeNormal />
 		</div>
 	{/if}
-	<div id="dispense-button" transition:slide={{ duration: 750, easing: expoInOut }}>
+	<div id="dispense-button">
 		{#if $secretActive}
-			<VodkaDispenser />
+			<div transition:slide={{ duration: 750, easing: expoInOut }}>
+				<VodkaButton />
+			</div>
 		{:else}
-			<BeerDispenser />
+			<div transition:slide={{ duration: 750, easing: expoInOut }}>
+				<BeerButton />
+			</div>
 		{/if}
 	</div>
 </div>

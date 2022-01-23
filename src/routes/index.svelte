@@ -5,4 +5,3 @@
 <div class="bg-image">
 	<MainMenu />
 </div>
-''
