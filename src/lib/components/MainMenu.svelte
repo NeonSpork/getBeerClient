@@ -10,8 +10,8 @@
 	import { onMount } from 'svelte';
 
 	const endpoint = `http://192.168.0.111/api/`;
-	$: temp = 'Sensors';
-	$: pints = 'Unavailable';
+	$: temp = 'Temp uninitialized';
+	$: pints = 'Pints uninitialized';
 
 	function incrementSecret() {
 		$secretCounter++;
@@ -34,7 +34,6 @@
 			const res = await fetch(`${endpoint}${valveAction}`, {
 				method: 'GET'
 			});
-			console.log(res);
 		} catch (error) {
 			createErrorMessage(error);
 		}
@@ -49,7 +48,7 @@
 			const res = await fetch(`${endpoint}${valveAction}`, {
 				method: 'GET'
 			});
-			console.log(res);
+			getPintsData();
 		} catch (error) {
 			createErrorMessage(error);
 		}
@@ -67,29 +66,32 @@
 		document.getElementById('container').appendChild(errorMessage);
 	}
 
-	async function getSensorData() {
+	async function getTempData() {
 		setTimeout(async () => {
 			try {
 				const tempFetch = await fetch(`${endpoint}temp`, {
 					method: 'GET'
 				});
-				temp = tempFetch.toString();
+				temp = `${Math.round(parseFloat(tempFetch.toString()))} \u00B0`;
 			} catch {
-				temp = 'sensor';
+				temp = 'Temp sensor error';
 			}
-			try {
-				const pintsFetch = await fetch(`${endpoint}pints`, {
-					method: 'GET'
-				});
-				pints = pintsFetch.toString();
-			} catch {
-				pints = 'error';
-			}
-		}, 1000);
+		}, 10000);
+	}
+
+	async function getPintsData() {
+		try {
+			const pintsFetch = await fetch(`${endpoint}pints`, {
+				method: 'GET'
+			});
+			pints = pintsFetch.toString();
+		} catch {
+			pints = 'Weight sensor error';
+		}
 	}
 
 	onMount(() => {
-		getSensorData();
+		getTempData();
 		const valveButton = document.getElementById('dispense-button');
 		valveButton.addEventListener('mousedown', openValve);
 		valveButton.addEventListener('touchstart', openValve);
