@@ -9,6 +9,7 @@
 	import VodkaButton from './VodkaButton.svelte';
 	import { onMount } from 'svelte';
 
+	const endpoint = `http://192.168.0.111/api/`;
 	$: temp = 'Sensors';
 	$: pints = 'Unavailable';
 
@@ -30,7 +31,7 @@
 			valveAction = 'openVodka';
 		}
 		try {
-			const res = await fetch(`http://192.168.0.111/api/${valveAction}`, {
+			const res = await fetch(`${endpoint}${valveAction}`, {
 				method: 'GET'
 			});
 			console.log(res);
@@ -45,7 +46,7 @@
 			valveAction = 'closeVodka';
 		}
 		try {
-			const res = await fetch(`http://192.168.0.111/api/${valveAction}`, {
+			const res = await fetch(`${endpoint}${valveAction}`, {
 				method: 'GET'
 			});
 			console.log(res);
@@ -66,9 +67,29 @@
 		document.getElementById('container').appendChild(errorMessage);
 	}
 
-	async function getSensorData() {}
+	async function getSensorData() {
+		setTimeout(async () => {
+			try {
+				const tempFetch = await fetch(`${endpoint}temp`, {
+					method: 'GET'
+				});
+				temp = tempFetch.toString();
+			} catch {
+				temp = 'sensor';
+			}
+			try {
+				const pintsFetch = await fetch(`${endpoint}pints`, {
+					method: 'GET'
+				});
+				pints = pintsFetch.toString();
+			} catch {
+				pints = 'error';
+			}
+		}, 1000);
+	}
 
 	onMount(() => {
+		getSensorData();
 		const valveButton = document.getElementById('dispense-button');
 		valveButton.addEventListener('mousedown', openValve);
 		valveButton.addEventListener('touchstart', openValve);
