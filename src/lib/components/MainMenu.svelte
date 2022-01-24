@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { secretActive, secretCounter } from '$lib/store';
-	import { slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
 	import BackButton from './BackButton.svelte';
 	import CraggsLoungeNormal from './CraggsLoungeNormal.svelte';
@@ -8,6 +8,9 @@
 	import BeerButton from './BeerButton.svelte';
 	import VodkaButton from './VodkaButton.svelte';
 	import { onMount } from 'svelte';
+
+	$: temp = 'Sensors';
+	$: pints = 'Unavailable';
 
 	function incrementSecret() {
 		$secretCounter++;
@@ -63,6 +66,8 @@
 		document.getElementById('container').appendChild(errorMessage);
 	}
 
+	async function getSensorData() {}
+
 	onMount(() => {
 		const valveButton = document.getElementById('dispense-button');
 		valveButton.addEventListener('mousedown', openValve);
@@ -77,40 +82,75 @@
 		<div
 			class="back-button"
 			on:click={resetDefault}
-			transition:slide={{ duration: 650, easing: expoInOut }}
+			transition:fly={{ duration: 500, easing: expoInOut, x: -250, y: 0 }}
 		>
 			<BackButton />
 		</div>
-		<div class="horizontal" transition:slide={{ duration: 650, easing: expoInOut }}>
+		<div class="horizontal" transition:fly={{ duration: 500, easing: expoInOut, x: 1250, y: -600 }}>
 			<CraggsLoungeSecret />
 		</div>
 	{:else}
 		<div
 			class="horizontal"
-			transition:slide={{ duration: 650, easing: expoInOut }}
+			transition:fly={{ duration: 500, easing: expoInOut, x: 1250, y: -600 }}
 			on:click={incrementSecret}
 		>
 			<CraggsLoungeNormal />
 		</div>
 	{/if}
-	<div id="dispense-button">
-		{#if $secretActive}
-			<div transition:slide={{ duration: 750, easing: expoInOut }}>
+	{#if $secretActive}
+		<div id="dispense-button">
+			<div transition:fly={{ duration: 500, easing: expoInOut, x: 1000, y: 0 }}>
 				<VodkaButton />
 			</div>
-		{:else}
-			<div transition:slide={{ duration: 750, easing: expoInOut }}>
+		</div>
+	{:else}
+		<div id="dispense-button">
+			<div transition:fly={{ duration: 500, easing: expoInOut, x: 1000, y: 0 }}>
 				<BeerButton />
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </div>
+
+{#if $secretActive}
+	<div class="glow">
+		<div class="red" transition:fly={{ duration: 500, easing: expoInOut, x: -1000, y: 0 }}>
+			<h1>{temp}</h1>
+			<h1>{pints}</h1>
+		</div>
+	</div>
+{:else}
+	<div class="glow">
+		<div class="purple" transition:fly={{ duration: 500, easing: expoInOut, x: -1000, y: 0 }}>
+			<h1>{temp}</h1>
+			<h1>{pints}</h1>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.back-button {
 		position: absolute;
 	}
 
+	.glow {
+		position: absolute;
+		display: flex;
+		bottom: 10px;
+		left: 25px;
+		color: white;
+	}
+
+	.purple {
+		text-shadow: 0px 0px 3px #6200ff, 0px 0px 5px #6200ff, 0px 0px 7px #6200ff, 0px 0px 10px #6200ff,
+			0px 0px 15px #6200ff, 0px 0px 30px #6200ff, 0px 0px 60px #6200ff, 0px 0px 150px #6200ff;
+	}
+
+	.red {
+		text-shadow: 0px 0px 3px #f00, 0px 0px 5px #f00, 0px 0px 7px #f00, 0px 0px 10px #f00,
+			0px 0px 15px #f00, 0px 0px 30px #f00, 0px 0px 60px #f00, 0px 0px 150px #f00;
+	}
 	#dispense-button {
 		position: absolute;
 		bottom: 0;
