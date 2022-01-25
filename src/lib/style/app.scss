@@ -1,6 +1,6 @@
 @font-face {
 	font-family: Harlow Solid Italic;
-	src: url('$lib/fonts/HARLOWSI.woff');
+	src: url('/static/fonts/HARLOWSI.woff');
 	font-weight: regular;
 }
 
@@ -11,7 +11,7 @@ body {
 	width: 100%;
 	margin: 0;
 	font-family: 'Harlow Solid Italic';
-	background-image: url('$lib/images/brick_wall.png');
+	background-image: url('/static/images/brick_wall.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
