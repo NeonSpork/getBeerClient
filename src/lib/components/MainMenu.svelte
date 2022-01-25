@@ -183,9 +183,13 @@
 		right: 0;
 	}
 
+	#container,
 	.horizontal {
 		display: flex;
-		max-width: 100vw;
-		max-height: 100vh;
+		justify-content: center;
+		align-items: center;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
 	}
 </style>
