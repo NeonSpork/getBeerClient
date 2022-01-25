@@ -26,6 +26,7 @@
 	}
 
 	async function openValve() {
+		console.log('opening');
 		let valveAction = 'openBeer';
 		if ($secretActive) {
 			valveAction = 'openVodka';
@@ -40,6 +41,7 @@
 	}
 
 	async function closeValve() {
+		console.log('closing');
 		let valveAction = 'closeBeer';
 		if ($secretActive) {
 			valveAction = 'closeVodka';
@@ -91,6 +93,7 @@
 	}
 
 	onMount(() => {
+		window.addEventListener('contextmenu', (e) => e.preventDefault());
 		getTempData();
 		const valveButton = document.getElementById('dispense-button');
 		valveButton.addEventListener('mousedown', openValve);
@@ -182,5 +185,7 @@
 
 	.horizontal {
 		display: flex;
+		max-width: 100vw;
+		max-height: 100vh;
 	}
 </style>
