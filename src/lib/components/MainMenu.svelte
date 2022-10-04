@@ -31,13 +31,14 @@
 		if ($secretActive) {
 			valveAction = 'openVodka';
 		}
-		try {
-			const res = await fetch(`${endpoint}${valveAction}`, {
-				method: 'GET'
-			});
-		} catch (error) {
-			createErrorMessage(error);
-		}
+		// TODO Add GPIO interaction here instead of fetch request
+		// try {
+		// 	const res = await fetch(`${endpoint}${valveAction}`, {
+		// 		method: 'GET'
+		// 	});
+		// } catch (error) {
+		// 	createErrorMessage(error);
+		// }
 	}
 
 	async function closeValve() {
@@ -46,14 +47,15 @@
 		if ($secretActive) {
 			valveAction = 'closeVodka';
 		}
-		try {
-			const res = await fetch(`${endpoint}${valveAction}`, {
-				method: 'GET'
-			});
-			getPintsData();
-		} catch (error) {
-			createErrorMessage(error);
-		}
+		// TODO Add GPIO interaction here instead of fetch request
+		// try {
+		// 	const res = await fetch(`${endpoint}${valveAction}`, {
+		// 		method: 'GET'
+		// 	});
+		// 	getPintsData();
+		// } catch (error) {
+		// 	createErrorMessage(error);
+		// }
 	}
 
 	function createErrorMessage(message: string) {
@@ -71,6 +73,7 @@
 	async function getTempData() {
 		setTimeout(async () => {
 			try {
+				// TODO direct GPIO interaction here with temp sensor?
 				const tempFetch = await fetch(`${endpoint}temp`, {
 					method: 'GET'
 				});
@@ -83,6 +86,7 @@
 
 	async function getPintsData() {
 		try {
+			// TODO direct GPIO interaction here with weight sensor?
 			const pintsFetch = await fetch(`${endpoint}pints`, {
 				method: 'GET'
 			});
