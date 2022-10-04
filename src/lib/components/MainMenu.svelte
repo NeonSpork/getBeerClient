@@ -1,4 +1,5 @@
 <script lang="ts">
+	import gpio from './GpioController.svelte';
 	import { secretActive, secretCounter } from '$lib/store';
 	import { fly } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
@@ -32,13 +33,13 @@
 			valveAction = 'openVodka';
 		}
 		// TODO Add GPIO interaction here instead of fetch request
-		// try {
-		// 	const res = await fetch(`${endpoint}${valveAction}`, {
-		// 		method: 'GET'
-		// 	});
-		// } catch (error) {
-		// 	createErrorMessage(error);
-		// }
+		try {
+			const res = await fetch(`${endpoint}${valveAction}`, {
+				method: 'GET'
+			});
+		} catch (error) {
+			createErrorMessage(error);
+		}
 	}
 
 	async function closeValve() {
@@ -97,6 +98,17 @@
 	}
 
 	onMount(() => {
+		try {
+			let gpio4 = gpio.export(4, {
+				direction: gpio.DIRECTION.OUT,
+				interval: 200,
+				ready: function () {
+					// logic here?
+				}
+			});
+		} catch {
+			console.log('gpio stuff went horribly wrong');
+		}
 		window.addEventListener('contextmenu', (e) => e.preventDefault());
 		getTempData();
 		const valveButton = document.getElementById('dispense-button');
